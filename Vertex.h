@@ -11,6 +11,7 @@ public:
 			position = Vec3(0, 0, 0);
 			 normal = Vec3(0, 0, 0);
 			 tex = Vec3(0, 0, 0);
+			 color = Vec3(0.3, 0.3, 0.3);
 	}
 	Vertex(const Vec3 & position, const Vec3& normal){
 		{

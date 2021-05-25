@@ -29,7 +29,8 @@ public:
 		}
 		//std::cout << diff << std::endl;
 		float spec = pow(L.saturate(R.Dot(V)), shininess);
-		return L.saturate((ambient + diffuse * diff)* texSample + specular * spec);
+		f.color = f.color.saturate((ambient + diffuse * diff) * texSample + specular * spec);
+		return f.color;
 	}	 
 	 Vec3 calculatep(Vec3 normal, VertexProc& vp, Vec3 pixelColor, Vec3 pixelPosition) const
 	{

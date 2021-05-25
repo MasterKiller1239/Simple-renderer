@@ -44,7 +44,10 @@ int main() {
 	std::string filename = "wall.jpg";
 	Texture tex;
 	tex.texture = stbi_load(filename.c_str(), &tex.width, &tex.height, &nrChannels,3);
-	
+	int  nrChannels1;
+	std::string filename1 = "wall2.jpg";
+	Texture tex1;
+	tex1.texture = stbi_load(filename1.c_str(), &tex1.width, &tex1.height, &nrChannels1, 3);
 
 	/*if (data != nullptr && width1 > 0 && height1 > 0)
 	{
@@ -93,16 +96,12 @@ int main() {
 	test.transform();
 
 	DirectionalLight light(Vec3(-1, 0, 0), Vec3(0.1f, .1f, .1f), Vec3(0.1f, .1f, .1f), Vec3(.5f, 1.0f, 1.f),10);
-
-	//PointLight light(Vec3(0, -0, 2), Vec3(0.1f, .1f, .1f), Vec3(1, 0, 0), Vec3(.5f, 1.0f, 1.f), 10);
-	//DirectionalLight light(Vec3(0, 0, 5), Vec3(0.1f, .1f, .1f), Vec3(1, 0, 0), Vec3(.5f, 1.0f, 1.f), 10);
-	//DirectionalLight light(Vec3(4, -0, 2), Vec3(0.1f, .1f, .1f), Vec3(1, 0, 0), Vec3(.5f, 1.0f, 1.f), 10);
-
-	//PointLight light(Vec3(0, 3, -5), Vec3(.0f, .0f, .2f), Vec3(0, 0.8f, 0.f), Vec3(1.0f, .0f, .0f), 3);
-	//Spotlight light2(Vec3(1.5f, 0, 5.f), Vec3(.0f, .0f, .2f), Vec3(0, 0.8f, 0.f), Vec3(1.0f, .0f, .0f), 3);
-
-	//PointLight light(Vec3(-1, -1, 2), Vec3(0.0f, 1.0f, .1f), Vec3(0, 0, 1), Vec3(.5f, 1.0f, 1.f));
+	DirectionalLight light2(Vec3(-1, 0, 0), Vec3(0.1f, .1f, .1f), Vec3(0.1f, .1f, .1f), Vec3(.5f, 1.0f, 1.f), 10);
+	DirectionalLight light1(Vec3(-1, 0, 0), Vec3(0.1f, .1f, .1f), Vec3(0.5f, .5f, .5f), Vec3(.0f, .0f, 0.f), 0);
+	light1.tex = tex;
 	light.tex = tex;
+	
+
 	test.setIdentity();
 	//test.setIdentityView();
 	//test.multbyTrans(Vec3(0.5, 0.5, 0.5));
@@ -144,13 +143,12 @@ int main() {
 	test.transform();
 	
 	//s.draws(r, test, light);
-	s.draws(r, test, light);
+	s.draw(r, test, light);
+	light2.tex = tex1;
 
+	light.tex = tex1;
 	test.setIdentity();
-	//test.setIdentityView();
-	//test.multbyTrans(Vec3(1.5, 1.5, 1.5));
-	//test.Scale(Vec3(0.5, 0.5, 0.5));
-	//test.multbyRot(-80.f, Vec3(0, 1, 0));
+	
 	test.transform();
 	Sphere s2(31, 16);
 
@@ -166,9 +164,27 @@ int main() {
 		//test.Scale(Vec3(0.5, 0.5, 0.5));
 	test.transform();
 	//s.draw(r, test);
-	s2.draws(r, test, light);
+	s2.draw(r, test, light2);
 
 
+	test.setIdentity();
+
+	test.transform();
+	Sphere s3(31, 16);
+
+	//s.draw(r, test);
+	s3.makeNormals();
+	//s.draw(r, test,light);
+	//s.draw(r, test, light1);
+	test.setIdentity();
+	test.multbyTrans(Vec3(2.5f, -1.5f, 0.0f));
+	//	test.multbyRot(180.f, Vec3(-1, 0, 0));
+		//test.multbyRot(90.f, Vec3(0, 0, 1));
+		//test.multbyRot(45.f, Vec3(1, 1, 0));
+		//test.Scale(Vec3(0.5, 0.5, 0.5));
+	test.transform();
+	//s.draw(r, test);
+	s3.draw(r, test, light1);
 
 	test.setIdentity();
 	//test.setIdentityView();
@@ -190,22 +206,6 @@ int main() {
 	//c.draw(r, test);
 	//c.draws(r, test, light);
 
-	/*r.triangle(Vec3(-.2f, .7f, -0.5f),
-		Vec3(0.3f, 0.f, .0f), Vec3(-.2f, -.5f, 0.9f), Vec3(1.0f, .0f, 1.f), Vec3(0.56f, 0.9f, .5f), Vec3(.0f, 1.0f, 0.f));*/
-	
-	/*r.triangle(Vec3(-0.5f, 0.7f, 0.0f),
-		Vec3(-0.5f, -0.7f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(1.0f, .0f, 0.f), Vec3(.0f, 1.0f, 0.f), Vec3(.0f, .0f, 1.f));
-	r.triangle(Vec3(-0.5f, 0.7f, 1.0f),
-		Vec3(0.75f, 0.0f, -1.0f), Vec3(-0.5f, -0.7f, 1.0f), Vec3(1.0f, .0f, 1.f), Vec3(1.0f, 1.0f, 0.f), Vec3(.0f, .0f, 1.f));
-	r.triangle(Vec3(0.0f, 0.5f, 0.0f),
-		Vec3(1.5f, 0.0f, 0.0f), Vec3(0.0f, -0.5f, 0.0f), Vec3(1.0f, .0f, 0.f), Vec3(.0f, .0f, 1.f), Vec3(1.0f, .0f, 0.f));
-		r.triangle(Vec3(-.9f, .9f, 0.f),
-		Vec3(0.f, .5f, 0.f), Vec3(-.5f, -.5f, 0.f), Vec3(1.0f, .0f, 0.f), Vec3(.0f, 1.0f, 0.f), Vec3(.0f, 1.0f, 0.f));
-	r.triangle(Vec3(-.5f, -.5f, 0.f),
-		Vec3(0.f, .5f, 0.f), Vec3(.5f, -.5f, 0.f),Vec3(1.0f, .0f, 1.f), Vec3(.0f, 1.0f, 1.0f), Vec3(.0f, 1.0f, 0.f));
-	r.triangle(Vec3(-.2f, .7f, -0.5f),
-		Vec3(0.3f, 0.f, .0f), Vec3(-.2f, -.5f, 0.9f), Vec3(1.0f, .0f, 1.f), Vec3(0.56f, 0.9f, .5f), Vec3(.0f, 1.0f, 0.f));
-		*/
 
 	for (int y = obraz->height-1; y >= 0; y--)
 	{
