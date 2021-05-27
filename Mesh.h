@@ -56,17 +56,24 @@ public:
 		for (int i = 0; i < tSize; ++i)
 		{
 
-			r.trianglen(vp.tr(vertices[indices[i].a].position),
-				vp.tr(vertices[indices[i].b].position),
-				vp.tr(vertices[indices[i].c].position),
-				(vertices[indices[i].a].normal),
-				(vertices[indices[i].b].normal),
-				(vertices[indices[i].c].normal),
+			//r.trianglen(vp.tr(vertices[indices[i].a].position),
+			//	vp.tr(vertices[indices[i].b].position),
+			//	vp.tr(vertices[indices[i].c].position),
+			//	(vertices[indices[i].a].normal),
+			//	(vertices[indices[i].b].normal),
+			//	(vertices[indices[i].c].normal),
+			//	vp,
+			//	Color,
+			//	Color,
+			//	Color, l);
+			r.trianglena(vertices[indices[i].a],
+				vertices[indices[i].b],
+				vertices[indices[i].c],
+				
 				vp,
 				Color,
 				Color,
 				Color, l);
-
 
 			;
 

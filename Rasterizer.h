@@ -21,5 +21,7 @@ public:
 	virtual void trianglen(const Vec3& v1, const Vec3& v2, const Vec3& v3, 
 		const Vec3& n1, const Vec3& n2, const Vec3& n3, VertexProc& vp, Vec3 color1, Vec3 color2, Vec3 color3,
 		const  Light& l);
+	void trianglena( Fragment& F,  Fragment& F2,  Fragment& F3, VertexProc& vp, Vec3 color1, Vec3 color2, Vec3 color3, const Light& l);
+	
 };
 

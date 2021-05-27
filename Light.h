@@ -2,8 +2,8 @@
 #include "Vec3.h"
 #include "Vertex.h"
 #include "VectorProc.h"
-
-struct Texture
+#include "Texture.h"
+struct Texture1
 {
 	unsigned char* texture=nullptr;
 	int width=NULL;
@@ -20,7 +20,8 @@ public:
 	virtual ~Light() {};
 	virtual Vec3 calculate( Fragment& f,  VertexProc& vp) const=0;
 	virtual Vec3 calculatep(Vec3 normal, VertexProc& vp, Vec3 pixelColor, Vec3 pixelPosition) const = 0;
-	Texture tex;
+	Texture1 tex;
+	Texture texture;
 protected:
 	Vec3 position, ambient, diffuse, specular;
 	

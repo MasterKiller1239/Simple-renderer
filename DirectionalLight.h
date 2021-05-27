@@ -2,6 +2,7 @@
 #include "Light.h"
 #include "Vec3.h"
 #include"stdlib.h"
+#include "Texture.h"
 class DirectionalLight: public Light
 {
 public:
@@ -19,17 +20,20 @@ public:
 		float diff = L.saturate(L.Dot(N));
 		//std::cout << N.x << N.y << N.z << std::endl;
 		Vec3 texSample(1,1,1);
-		if (tex.height != NULL)
+		if (texture.textureHeight != 0)
 		{
-			unsigned int c = static_cast<int>(tex.texture[int(f.tex.x*(tex.width-1))+ int(f.tex.y * (tex.height - 1)) * tex.width]);
-			unsigned int c1 = static_cast<int>(tex.texture[int(f.tex.x * (tex.width - 1)) + int(f.tex.y * (tex.height - 1)) * tex.width+1]);
-			unsigned int c2 = static_cast<int>(tex.texture[int(f.tex.x * (tex.width - 1)) + int(f.tex.y * (tex.height - 1)) * tex.width+2]);
+			unsigned int c = static_cast<int>(texture.colorData[int(f.tex.x*(tex.width-1))+ int(f.tex.y * (tex.height - 1)) * tex.width]);
+			unsigned int c1 = static_cast<int>(texture.colorData[int(f.tex.x * (tex.width - 1)) + int(f.tex.y * (tex.height - 1)) * tex.width+1]);
+			unsigned int c2 = static_cast<int>(texture.colorData[int(f.tex.x * (tex.width - 1)) + int(f.tex.y * (tex.height - 1)) * tex.width+2]);
+			texSample = texture.getPixelColor(int(f.tex.x * (tex.width - 1)), int(f.tex.y * (tex.height - 1)) * tex.width);
 			texSample = Vec3(c / 255.0, c1 / 255.0, c2 / 255.0);
-			std::cout << texSample.x << texSample.y << texSample.z << std::endl;
+		//	std::cout << texSample.x << texSample.y << texSample.z << std::endl;
 		}
 		//std::cout << diff << std::endl;
 		float spec = pow(L.saturate(R.Dot(V)), shininess);
-		f.color = f.color.saturate((ambient + diffuse * diff) * texSample + specular * spec);
+		if (shininess > 0)
+			f.color = f.color.saturate((ambient + diffuse * diff) * texSample + specular * spec);
+		else 	f.color = f.color * texSample;
 		return f.color;
 	}	 
 	 Vec3 calculatep(Vec3 normal, VertexProc& vp, Vec3 pixelColor, Vec3 pixelPosition) const
@@ -46,7 +50,7 @@ public:
 
 		//std::cout << diff << std::endl;
 		float spec = pow(lightDir.saturate(reflectDir.Dot(viewDir)), shininess);
-		return lightDir.saturate(ambient + diffuse * diff + specular * spec);
+		return lightDir.saturate( ( ambient + pixelColor * diff) + specular * spec);
 	}
 protected:
 private:

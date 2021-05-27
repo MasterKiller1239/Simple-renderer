@@ -150,6 +150,7 @@
     <ClCompile Include="Rasterizer.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Spotlight.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Torus.cpp" />
     <ClCompile Include="Vec3.cpp" />
     <ClCompile Include="VectorProc.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="stb_image_resize.h" />
     <ClInclude Include="stb_image_write.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Torus.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="VectorProc.h" />

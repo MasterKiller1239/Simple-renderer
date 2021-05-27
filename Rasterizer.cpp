@@ -1,6 +1,6 @@
 #include "Rasterizer.h"
 #include <iostream>
-
+#include "Texture.h"
 
 inline int min(int a, int b, int c)
 {
@@ -113,7 +113,7 @@ void Rasterizer::triangle(const Vec3& v1, const Vec3& v2, const Vec3& v3, Vec3 c
 	}
 };
 void Rasterizer::trianglen(const Vec3& v1, const Vec3& v2, const Vec3& v3, const Vec3& n1, const Vec3& n2, const Vec3& n3, VertexProc& vp, Vec3 color1, Vec3 color2, Vec3 color3, const  Light& l)
- {
+{
 
 	float y1 = (v1.y + 1) * pic.height * .5f;
 	float y2 = (v2.y + 1) * pic.height * .5f;
@@ -175,12 +175,109 @@ void Rasterizer::trianglen(const Vec3& v1, const Vec3& v2, const Vec3& v3, const
 					color1
 					, Vec3(n1 * lambda1 + n2 * lambda2 + n3 * lambda3)
 				);*/
-					
-			//	f = l.calculate(f);
-		
+
+				//	f = l.calculate(f);
+
 				float depth = v1.z * lambda1 + v2.z * lambda2 + v3.z * lambda3;
 				Vec3 c = (color1 * lambda1 + color2 * lambda2 + color3 * lambda3) * 255;
 				shadedColor += l.calculatep(newNormal, vp, newColor, newPos);
+				shadedColor = shadedColor * 255.0f;
+				Color color;
+
+				color.red = shadedColor.x;
+
+				color.green = shadedColor.y;
+
+				color.blue = shadedColor.z;
+
+				/*pic.tab[x + y * pic.width] = color;*/
+				if (depth < pic.depthbuffor[x + y * pic.width])
+				{
+					pic.tab[x + y * pic.width] = color;
+					pic.depthbuffor[x + y * pic.width] = depth;
+				}
+
+
+			}
+		}
+
+	}
+};
+void Rasterizer::trianglena( Fragment &F,  Fragment& F2,  Fragment& F3, VertexProc& vp, Vec3 color1, Vec3 color2, Vec3 color3, const  Light& l)
+ {
+	Vec3 first = vp.tr(F.position);
+	Vec3 second = vp.tr(F2.position);
+	Vec3 third = vp.tr(F3.position);
+	float y1 = (first.y + 1) * pic.height * .5f;
+	float y2 = (second.y + 1) * pic.height * .5f;
+	float y3 = (third.y + 1) * pic.height * .5f;
+
+	float x1 = (first.x + 1) * pic.width * .5f;
+	float x2 = (second.x + 1) * pic.width * .5f;
+	float x3 = (third.x + 1) * pic.width * .5f;
+	int minx = (int)min(x1, x2, x3);
+	int maxx = (int)max(x1, x2, x3);
+	int miny = (int)min(y1, y2, y3);
+	int maxy = (int)max(y1, y2, y3);
+	minx = max(minx, 0);
+	maxx = min(maxx, pic.width - 1);
+	miny = max(miny, 0);
+	maxy = min(maxy, pic.height - 1);
+	float dx12 = x1 - x2;
+	float dx23 = x2 - x3;
+	float dx31 = x3 - x1;
+	float dy12 = y1 - y2;
+	float dy23 = y2 - y3;
+	float dy31 = y3 - y1;
+	float lambda1den = 1.f / (-dy23 * dx31 + dx23 * dy31);
+	float lambda2den = 1.f / (dy31 * dx23 - dx31 * dy23);
+
+	bool topleft1 = false, topleft2 = false, topleft3 = false;
+	if (dy12 < 0 || (dy12 == 0 && dx12 > 0)) { topleft1 = true; }
+	if (dy23 < 0 || (dy23 == 0 && dx23 > 0)) { topleft1 = true; }
+	if (dy31 < 0 || (dy31 == 0 && dx31 > 0)) { topleft1 = true; }
+	for (int y = maxy; y >= miny; y--)
+	{
+
+		for (int x = minx; x <= maxx; x++)
+		{
+			if ((dx12 * (y - y1) - dy12 * (x - x1) > 0 && !topleft1 ||
+				dx12 * (y - y1) - dy12 * (x - x1) >= 0 && topleft1)
+				&&
+				(dx23 * (y - y2) - dy23 * (x - x2) > 0 && !topleft2 ||
+					dx23 * (y - y2) - dy23 * (x - x2) >= 0 && topleft2)
+				&&
+				(dx31 * (y - y3) - dy31 * (x - x3) > 0 && !topleft3 ||
+					dx31 * (y - y3) - dy31 * (x - x3) >= 0 && topleft3
+					)
+				)
+				/*	if (dx12 * (y - y1) - dy12 * (x - x1) > 0 &&
+						dx23 * (y - y2) - dy23 * (x - x2) > 0 &&
+						dx31 * (y - y3) - dy31 * (x - x3) >0
+						)*/
+			{
+				float lambda1 = (dy23 * (x - x3) - dx23 * (y - y3)) * lambda1den;
+				float lambda2 = (dy31 * (x - x3) - dx31 * (y - y3)) * lambda2den;
+				float lambda3 = 1 - lambda1 - lambda2;
+				Vec3 newColor = (color1 * lambda1 + color2 * lambda2 + color3 * lambda3);
+				Vec3 newNormal = (F.normal * lambda1 + F2.normal * lambda2 + F3.normal * lambda3);
+				Vec3 newPos = (first * lambda1 + second * lambda2 + third * lambda3);
+				Vec3 shadedColor = Vec3();
+				/*Fragment f(Vec3(first * lambda1 + first * lambda2 + v3 * lambda3),
+					Vec3(n1 * lambda1 + n2 * lambda2 + n3 * lambda3),
+					color1
+					, Vec3(n1 * lambda1 + n2 * lambda2 + n3 * lambda3)
+				);*/
+					
+			//	f = l.calculate(f);
+		
+				float depth = first.z * lambda1 + second.z * lambda2 + third.z * lambda3;
+				Vec3 c = (color1 * lambda1 + color2 * lambda2 + color3 * lambda3) * 255;
+				float newU = F.tex.x * lambda1 + F2.tex.x * lambda2 + F3.tex.x * lambda3;
+				float newV = F.tex.y * lambda1 + F.tex.y * lambda2 + F.tex.y * lambda3;
+
+				Vec3 shadedColor1 = l.texture.extractTextureColor(newU, newV);
+				shadedColor += l.calculatep(newNormal, vp, shadedColor1, newPos);
 				shadedColor = shadedColor * 255.0f;
 				Color color;
 

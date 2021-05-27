@@ -22,8 +22,8 @@ public:
 				float z = r * sin(2.f * pi / vert * rr);
 				this->vertices[rr + yy * vert].position = Vec3(x, y, z);
 				this->vertices[rr + yy * vert].tex = Vec3(
-					1.f - float(rr) / float(vert - 1),
-					1.f - float(yy) / float(horiz + 1), 0
+					 float(rr) / float(vert ),
+					 float(yy) / float(horiz ), 0
 				);
 			}
 		}

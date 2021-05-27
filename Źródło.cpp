@@ -10,9 +10,8 @@
 #include "PointLight.h"
 #include "Spotlight.h"
 using namespace std;
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
+#include "Texture.h"
 
 class  Image {
 public:
@@ -40,14 +39,14 @@ public:
 int main() {
 	int width = 512, height = 255;
 
-	int  nrChannels;
+	int  nrChannels=3;
 	std::string filename = "wall.jpg";
-	Texture tex;
-	tex.texture = stbi_load(filename.c_str(), &tex.width, &tex.height, &nrChannels,3);
+	Texture1 tex;
+	//tex.texture = stbi_load(filename.c_str(), &tex.width, &tex.height, &nrChannels,3);
 	int  nrChannels1;
 	std::string filename1 = "wall2.jpg";
-	Texture tex1;
-	tex1.texture = stbi_load(filename1.c_str(), &tex1.width, &tex1.height, &nrChannels1, 3);
+	Texture1 tex1;
+	//tex1.texture = stbi_load(filename1.c_str(), &tex1.width, &tex1.height, &nrChannels1, 3);
 
 	/*if (data != nullptr && width1 > 0 && height1 > 0)
 	{
@@ -98,9 +97,9 @@ int main() {
 	DirectionalLight light(Vec3(-1, 0, 0), Vec3(0.1f, .1f, .1f), Vec3(0.1f, .1f, .1f), Vec3(.5f, 1.0f, 1.f),10);
 	DirectionalLight light2(Vec3(-1, 0, 0), Vec3(0.1f, .1f, .1f), Vec3(0.1f, .1f, .1f), Vec3(.5f, 1.0f, 1.f), 10);
 	DirectionalLight light1(Vec3(-1, 0, 0), Vec3(0.1f, .1f, .1f), Vec3(0.5f, .5f, .5f), Vec3(.0f, .0f, 0.f), 0);
-	light1.tex = tex;
-	light.tex = tex;
-	
+	light1.texture = Texture("wall2.jpg",3);
+	light.texture = Texture("wall.jpg", 3);
+	light2.texture = Texture("wall.jpg", 3);
 
 	test.setIdentity();
 	//test.setIdentityView();
@@ -143,14 +142,14 @@ int main() {
 	test.transform();
 	
 	//s.draws(r, test, light);
-	s.draw(r, test, light);
+	s.draws(r, test, light);
 	light2.tex = tex1;
 
 	light.tex = tex1;
 	test.setIdentity();
 	
 	test.transform();
-	Sphere s2(31, 16);
+	Sphere s2(31, 31);
 
 	//s.draw(r, test);
 	s2.makeNormals();
@@ -164,13 +163,13 @@ int main() {
 		//test.Scale(Vec3(0.5, 0.5, 0.5));
 	test.transform();
 	//s.draw(r, test);
-	s2.draw(r, test, light2);
+	s2.draws(r, test, light2);
 
 
 	test.setIdentity();
 
 	test.transform();
-	Sphere s3(31, 16);
+	Sphere s3(31, 31);
 
 	//s.draw(r, test);
 	s3.makeNormals();
@@ -184,7 +183,7 @@ int main() {
 		//test.Scale(Vec3(0.5, 0.5, 0.5));
 	test.transform();
 	//s.draw(r, test);
-	s3.draw(r, test, light1);
+	s3.draws(r, test, light1);
 
 	test.setIdentity();
 	//test.setIdentityView();
